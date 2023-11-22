@@ -1,23 +1,30 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const Demo = () => {
 	const { store, actions } = useContext(Context);
-	const { userData, setUserData } = useState(null);
-	const navigate = useNavigate()
+	const { accessToken, userInfo } = store;  // Desestructura las variables necesarias
+	const [userData, setUserData] = useState(null);
+	const navigate = useNavigate();
+
 	useEffect(() => {
-		if (store.accessToken) {
-			actions.getUserInfo().then(data => setUserData(data))
-		} else {
-			Navigate("/")
-		}
-	}, [store.accessToken])
+		const fetchData = async () => {
+			if (accessToken) {
+				const data = await actions.getUserInfo();
+				setUserData(data);
+			} else {
+				navigate("/");
+			}
+		};
+
+		fetchData();
+	}, [accessToken, navigate]);
 
 	return (
 		<div className="container">
-			<p>{userData == "ok" ? JSON.stringify(store.userInfo) : userData}</p>
-
+			<p>{userData ? JSON.stringify(userInfo) : userData}</p>
 		</div>
 	);
 };
+

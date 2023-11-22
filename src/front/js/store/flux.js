@@ -18,7 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 		},
 		actions: {
-			apiFecthPublic: async (endpoint, method = "Get", body = null) => {
+			apiFetchPublic: async (endpoint, method = "Get", body = null) => {
 				var request
 				//si la peticion es Get
 				if (method == "Get") {
@@ -49,7 +49,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const params = {
 					method,
 					headers: {
-						"Authorization": "Bearer" + accessToken
+						"Authorization": "Bearer " + accessToken
 					}
 				}
 
@@ -68,11 +68,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ accessToken: token })
 			},
 			login: async (email, password) => {
-				const { apiFecthPublic } = getActions()
+				const { apiFetchPublic } = getActions()
 				const resp = await apiFetchPublic("/login", "Post", { email, password })
-				if (resp - code != 200) {
-					console.error("Login error")
-					return null
+				if (resp.code !== 200) {
+					console.error("Login error");
+					return null;
 				}
 				console.log({ resp })
 				const { message, token } = resp.data
@@ -80,7 +80,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ accessToken })
 				return message
 			},
-			singnup: (email, password) => {
+			signup: (email, password) => {
 
 			},
 			getInfo: async () => {
